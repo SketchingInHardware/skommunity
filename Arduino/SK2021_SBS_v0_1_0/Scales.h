@@ -1,4 +1,4 @@
-#include "MQTT_MessagePackagerDefs.h"
+#include "MQTT_Handler.h"
 //-------------------------------------   STEPPING TONE
 int incrementTone;
 int nextToneStep;
@@ -6,9 +6,8 @@ int stepMagnitude = 1;
 int incrementToneMax = 255;
 int incrementToneMin = 0;
 
-#define ROOT_TOPIC "skommunity"
 #define SCALE_SUB_TAG "byte_scale"
-#define SCALE_FULL_TOPIC ROOT_TOPIC "/" SCALE_SUB_TAG
+#define SCALE_FULL_TOPIC ROOT_TOPIC SEPARATOR SCALE_SUB_TAG
 
 String scaleToneMessage() {
   

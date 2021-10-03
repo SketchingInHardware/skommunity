@@ -1,10 +1,12 @@
 
+#ifndef MQTTDEFS
+#define MQTTDEFS
+
 #include <ArduinoMqttClient.h>
 #include "Network_Connection.h"
 #include "real_secrets.h"
 //#include "arduino_secrets.h"
 
-#include "MQTT_MessagePackagerDefs.h"
 
 MqttClient mqttClient(network_connection);
 
@@ -12,13 +14,33 @@ MqttClient mqttClient(network_connection);
 char broker[] = "public.cloud.shiftr.io";
 int port = 1883;
 
-
-char subscription_topic[] = "skommunity";
+#define ROOT_TOPIC "skommunity"
+#define SEPARATOR "/"
+char subscription_topic[] = ROOT_TOPIC;
 char clientID[] = "Herald";
 
+// define a new type that is a function pointer
+typedef String (*messsage_function)(void);
 
-//--------------------------------------------- MQTT_MessagePackager
+//------------------------------------------------------------------ 
+//--------------------------------------------------------- OUTGOING
 
+//TODO: Rename MQTT_Object to something more descriptive
+struct MQTT_Object {
+  long lastTimeSent;
+  int interval;
+  messsage_function getMessage;
+  char topic[];
+};
+
+//TODO: For run time updates, but maybe doesn't really work
+//char* topicAssembler(char* topic, char* subtag) {
+//    char myConcatenation[strlen(topic) + 1 + strlen(subtag)];
+//    sprintf(myConcatenation,"%s/%s",topic,subtag);
+//    return myConcatenation;
+//}
+
+//-------------------------------------   sendMQTTObject(MQTT_Object* mqtto)
 void sendMQTTObject(MQTT_Object* mqtto) {
   if (millis() - mqtto->lastTimeSent > mqtto->interval) {
     // start a new message on the objects topic:
@@ -30,6 +52,8 @@ void sendMQTTObject(MQTT_Object* mqtto) {
   }
 }
 
+//------------------------------------------------------------------ 
+//--------------------------------------------- CONNECTION TO BROKER
 
 //-------------------------------------   connectToBroker()
 boolean connectToBroker() {
@@ -48,6 +72,7 @@ boolean connectToBroker() {
 }
 
 
+//-------------------------------------   connectToMQTT()
 //TODO:Limit attempts, fail gracefully
 void connectToMQTT() {
     // set the credentials for the MQTT client:
@@ -62,6 +87,7 @@ void connectToMQTT() {
   Serial.println("connected to broker");
 }
 
+//-------------------------------------   testMQTTConnection()
 void testMQTTConnection() {
     // if not connected to the broker, try to connect:
   if (!mqttClient.connected()) {
@@ -70,6 +96,11 @@ void testMQTTConnection() {
   }
 }
 
+//------------------------------------------------------------------ 
+//--------------------------------------------------------- INCOMING
+
+//----------------------------------- -- Place Holder Message Reader
+//TODO: Message Reciever Processor
 void fetchMQTTMessage() {
     // if a message comes in, read it:
   if (mqttClient.parseMessage() > 0) {
@@ -87,3 +118,7 @@ void fetchMQTTMessage() {
     }
   }
 }
+
+//------------------------------------------ End Place Holder Message Reader
+
+#endif
