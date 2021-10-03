@@ -23,7 +23,7 @@ String scaleToneMessage() {
     
 }
 
-MQTT_Object scaleToneMessageObject = {
+MQTT_TimedMessageObject scaleToneMessageObject = {
   .lastTimeSent = 0,
   .interval = 3000,
   .getMessage = scaleToneMessage,

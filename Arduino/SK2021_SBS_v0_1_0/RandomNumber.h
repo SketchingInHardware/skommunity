@@ -9,7 +9,7 @@ String randomMessage() {
   return String(random(255));
 }
 
-MQTT_Object randomMessageObject = {
+MQTT_TimedMessageObject randomMessageObject = {
   .lastTimeSent = 0,
   .interval = 5000,
   .getMessage = randomMessage,

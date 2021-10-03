@@ -26,7 +26,7 @@ String getHungerValueForMessage() {
 }
 
 //---------------------------------  HUNGER OBJECT
-MQTT_Object hungerMessageObject = {
+MQTT_TimedMessageObject hungerMessageObject = {
   .lastTimeSent = 0,
   .interval = 3000,
   .getMessage = getHungerValueForMessage,
@@ -112,7 +112,7 @@ String getStrokeValueForMessage() {
 }
 
 //---------------------------------  FOLICLE OBJECT
-MQTT_Object strokeMessageObject = {
+MQTT_TimedMessageObject strokeMessageObject = {
   .lastTimeSent = 0,
   .interval = 5000,
   .getMessage = getStrokeValueForMessage,

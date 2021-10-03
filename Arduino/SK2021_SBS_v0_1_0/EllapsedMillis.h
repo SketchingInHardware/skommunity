@@ -9,7 +9,7 @@ String millisMessage() {
   return String(millis());
 }
 
-MQTT_Object ellapsedMillisObject = {
+MQTT_TimedMessageObject ellapsedMillisObject = {
   .lastTimeSent = 0,
   .interval = 1000,
   .getMessage = millisMessage,

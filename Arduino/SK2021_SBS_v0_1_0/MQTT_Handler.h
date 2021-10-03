@@ -25,8 +25,8 @@ typedef String (*messsage_function)(void);
 //------------------------------------------------------------------ 
 //--------------------------------------------------------- OUTGOING
 
-//TODO: Rename MQTT_Object to something more descriptive
-struct MQTT_Object {
+//TODO: Rename MQTT_TimedMessageObject to something more descriptive
+struct MQTT_TimedMessageObject {
   long lastTimeSent;
   int interval;
   messsage_function getMessage;
@@ -42,8 +42,8 @@ struct MQTT_Object {
 //    return myConcatenation; //But does not return
 //}
 
-//-------------------------------------   sendMQTTObject(MQTT_Object* mqtto)
-void sendMQTTObject(MQTT_Object* mqtto) {
+//-------------------------------------   sendMQTTObject(MQTT_TimedMessageObject* mqtto)
+void sendMQTTObject(MQTT_TimedMessageObject* mqtto) {
   if (millis() - mqtto->lastTimeSent > mqtto->interval) {
     // start a new message on the objects topic:
     mqttClient.beginMessage(mqtto->topic);
