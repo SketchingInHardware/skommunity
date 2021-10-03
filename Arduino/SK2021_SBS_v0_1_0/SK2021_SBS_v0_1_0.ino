@@ -64,12 +64,12 @@ void loop() {
     connectToBroker();
   }
 
-    sendMQTTObject(&randomMessageObject);
-    sendMQTTObject(&scaleToneMessageObject);
-    sendMQTTObject(&ellapsedMillisObject);
+    sendMQTTTimedObject(&randomMessageObject);
+    sendMQTTTimedObject(&scaleToneMessageObject);
+    sendMQTTTimedObject(&ellapsedMillisObject);
 
-//  sendMQTTObject(&hungerMessageObject);
-//  sendMQTTObject(&strokeMessageObject);
+//  sendMQTTTimedObject(&hungerMessageObject);
+//  sendMQTTTimedObject(&strokeMessageObject);
 
 }
 
