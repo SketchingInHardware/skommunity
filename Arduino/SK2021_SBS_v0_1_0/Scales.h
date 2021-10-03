@@ -23,5 +23,5 @@ MQTT_Object scaleToneMessageObject = {
   .lastTimeSent = 0,
   .interval = 3000,
   .getMessage = scaleToneMessage,
-   {.tag = "skommunity/scale"}
+   {.tag = "skommunity/byte_scale"}
 };

@@ -8,7 +8,6 @@ Message Seeder Code v 0.0.1
 #include "HardwareHandler.h"
 
 //Message Generators
-#include "Poem.h"
 #include "RandomNumber.h"
 #include "Scales.h"
 
@@ -65,10 +64,6 @@ void loop() {
 
     sendMQTTObject(&randomMessageObject);
     sendMQTTObject(&scaleToneMessageObject);
-  
-//    updatePoemLine();
-//    updatePoemLineInterval(&poemMessageObject);
-//    sendMQTTObject(&poemMessageObject);
 
 //  sendMQTTObject(&hungerMessageObject);
 //  sendMQTTObject(&strokeMessageObject);
