@@ -33,11 +33,13 @@ struct MQTT_Object {
   char topic[];
 };
 
-//TODO: For run time updates, but maybe doesn't really work
+//TODO: For run time updates, but doesn't really work
+//There are problems https://forum.arduino.cc/t/can-a-function-return-a-char-array/63405/5
 //char* topicAssembler(char* topic, char* subtag) {
 //    char myConcatenation[strlen(topic) + 1 + strlen(subtag)];
 //    sprintf(myConcatenation,"%s/%s",topic,subtag);
-//    return myConcatenation;
+//    Serial.println(myConcatenation); //Prints...
+//    return myConcatenation; //But does not return
 //}
 
 //-------------------------------------   sendMQTTObject(MQTT_Object* mqtto)
