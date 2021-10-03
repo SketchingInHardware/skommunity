@@ -25,5 +25,5 @@ MQTT_Object poemMessageObject = {
   .lastTimeSent = 0,
   .interval = lineInterval[0],
   .getMessage = poemMessage,
-   {.tag = "try/table_7/poem"}
+   {.tag = "skommunity/poem"}
 };
