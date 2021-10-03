@@ -11,16 +11,18 @@ MqttClient mqttClient(network_connection);
 // details for MQTT client:
 char broker[] = "public.cloud.shiftr.io";
 int port = 1883;
-char topic[] = "skommunity-test";
-char clientID[] = "skommunity";
+
+
+char subscription_topic[] = "skommunity";
+char clientID[] = "Herald";
 
 
 //--------------------------------------------- MQTT_MessagePackager
 
 void sendMQTTObject(MQTT_Object* mqtto) {
   if (millis() - mqtto->lastTimeSent > mqtto->interval) {
-    // start a new message on the topic:
-    mqttClient.beginMessage(mqtto->tag);
+    // start a new message on the objects topic:
+    mqttClient.beginMessage(mqtto->topic);
     // add a random number as a numeric string (print(), not write()):
     mqttClient.print(mqtto->getMessage());
     mqttClient.endMessage();
@@ -40,7 +42,7 @@ boolean connectToBroker() {
     return false;
   }
   // once you're connected, you can proceed:
-  mqttClient.subscribe(topic);
+  mqttClient.subscribe(subscription_topic);
   // return that you're connected:
   return true;
 }
@@ -84,13 +86,4 @@ void fetchMQTTMessage() {
 //      }
     }
   }
-}
-
-void sendRandomMQTTMessage() {
-      //start a new message on the topic:
-      mqttClient.beginMessage(topic);
-      // add a random number as a numeric string (print(), not write()):
-      mqttClient.print(random(255));
-      // send the message:
-      mqttClient.endMessage();
 }

@@ -8,5 +8,5 @@ MQTT_Object randomMessageObject = {
   .lastTimeSent = 0,
   .interval = 5000,
   .getMessage = randomMessage,
-  {.tag = "skommunity/random"}
+  {.topic = "skommunity/random"}
 };

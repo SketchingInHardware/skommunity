@@ -9,6 +9,14 @@ struct MQTT_Object {
   long lastTimeSent;
   int interval;
   messsage_function getMessage;
-  char tag[];
+  char topic[];
 };
+
+//TODO: For run time updates, but maybe doesn't really work
+//char* topicAssembler(char* topic, char* subtag) {
+//    char myConcatenation[strlen(topic) + 1 + strlen(subtag)];
+//    sprintf(myConcatenation,"%s/%s",topic,subtag);
+//    return myConcatenation;
+//}
+
 #endif
