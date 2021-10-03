@@ -10,6 +10,7 @@ Message Seeder Code v 0.0.1
 //Message Generators
 #include "RandomNumber.h"
 #include "Scales.h"
+#include "EllapsedMillis.h"
 
 
 //----------------------------------------------------   SETUP
@@ -27,6 +28,7 @@ void setup() {
 
   connectToWiFi();
   connectToMQTT();
+  
 }
 
 
@@ -64,6 +66,7 @@ void loop() {
 
     sendMQTTObject(&randomMessageObject);
     sendMQTTObject(&scaleToneMessageObject);
+    sendMQTTObject(&ellapsedMillisObject);
 
 //  sendMQTTObject(&hungerMessageObject);
 //  sendMQTTObject(&strokeMessageObject);
