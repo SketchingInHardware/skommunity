@@ -26,18 +26,8 @@ void setup() {
 //----------------------------------------------------   LOOP
 void loop() {
 
-  //-------------------------------------  Read Binary Hardware
-  //-------------------------------------  Read Analog Hardware
-  //-------------------------------------  Update Local World
-
-
-  //-------------------------------------  Update Remote World
-  // if not connected to the broker, try to connect:
-
   worry();
   
-
-
 }
 
 //----------------------------------------------------   END LOOP
