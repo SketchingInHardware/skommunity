@@ -1,6 +1,8 @@
 #include "MQTT_Handler.h"
 
-
+//TODO: 
+//- Add functionGenerator rhythms
+//- Local hardware inputs? 
 
 
 //-------------------------------------   Ellapsed Millia

@@ -14,10 +14,10 @@ MqttClient mqttClient(network_connection);
 char broker[] = "public.cloud.shiftr.io";
 int port = 1883;
 
-#define ROOT_TOPIC "skommunity/reference"
+#define ROOT_TOPIC "skommunity/beats"
 #define SEPARATOR "/"
 char subscription_topic[] = ROOT_TOPIC;
-char clientID[] = "Librarian";
+char clientID[] = "DJ";
 
 
 
