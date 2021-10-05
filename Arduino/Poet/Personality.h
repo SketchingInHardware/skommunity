@@ -13,7 +13,7 @@ const float awareQ = 18;
 const float ambQ = 30;
 
 const float scope = 2* (sentQ + awareQ +  ambQ);
-const float freqScale = 0.5;
+const float freqScale = 0.05;
 
 int POET_currentValue;
 int POET_targetValue = (sentQ + awareQ +  ambQ); //random(scope);
