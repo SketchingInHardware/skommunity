@@ -11,6 +11,7 @@ Message Seeder Code v 0.0.1
 #include "RandomNumber.h"
 #include "Scales.h"
 #include "EllapsedMillis.h"
+#include "SenderWithConditions.h"
 
 
 //----------------------------------------------------   SETUP
@@ -67,6 +68,7 @@ void loop() {
     sendMQTTTimedObject(&randomMessageObject);
     sendMQTTTimedObject(&scaleToneMessageObject);
     sendMQTTTimedObject(&ellapsedMillisObject);
+    sendMQTTConditionalMessage(&conditionalSender);
 
 //  sendMQTTTimedObject(&hungerMessageObject);
 //  sendMQTTTimedObject(&strokeMessageObject);

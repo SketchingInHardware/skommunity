@@ -17,7 +17,7 @@ int port = 1883;
 #define ROOT_TOPIC "skommunity"
 #define SEPARATOR "/"
 char subscription_topic[] = ROOT_TOPIC;
-char clientID[] = "Herald";
+char clientID[] = "Worrier";
 
 
 
