@@ -16,12 +16,13 @@ int port = 1883;
 
 #define ROOT_TOPIC "skommunity"
 #define SEPARATOR "/"
-char subscription_topic[] = ROOT_TOPIC;
-char clientID[] = "Herald";
+#define MULTIALL "#"
+#define SUBSCRIBE_ALL ROOT_TOPIC SEPARATOR MULTIALL
+char clientID[] = "Tester";
 
 
 
-//------------------------------------------------------------------ 
+//------------------------------------------------------------------
 //--------------------------------------------------------- OUTGOING
 
 // define a new type that is a function pointer
@@ -37,7 +38,6 @@ struct MQTT_TimedMessageObject {
 // define a new type that is a function pointer
 typedef boolean (*conditional_function)(void);
 
-
 struct MQTT_ConditionalMessageObject {
   long lastTimeSent;
   conditional_function getState;
@@ -45,8 +45,12 @@ struct MQTT_ConditionalMessageObject {
   char topic[];
 };
 
-//TODO: For run time updates, but doesn't really work
-//There are problems https://forum.arduino.cc/t/can-a-function-return-a-char-array/63405/5
+//TODO: Updateable topic for run time updates. The below function does print
+//but does not return an extant reference (myConcat gets released upon termination).
+//Convert topic references from char[] -> Arduio String?
+//For reference the char[] problem:
+//https://forum.arduino.cc/t/can-a-function-return-a-char-array/63405/5
+//https://forum.arduino.cc/t/how-to-return-a-char-from-a-function/184239/9
 //char* topicAssembler(char* topic, char* subtag) {
 //    char myConcatenation[strlen(topic) + 1 + strlen(subtag)];
 //    sprintf(myConcatenation,"%s/%s",topic,subtag);
@@ -69,7 +73,7 @@ void sendMQTTTimedObject(MQTT_TimedMessageObject* mqtto) {
 //-------------------------------------   sendMQTTConditionalMessage(MQTT_ConditionalMessageObject* mqtto)
 void sendMQTTConditionalMessage(MQTT_ConditionalMessageObject* mqtto) {
   if (mqtto->getState()) {
-     // start a new message on the objects topic:
+    // start a new message on the objects topic:
     mqttClient.beginMessage(mqtto->topic);
     // add a random number as a numeric string (print(), not write()):
     mqttClient.print(mqtto->getMessage());
@@ -80,8 +84,67 @@ void sendMQTTConditionalMessage(MQTT_ConditionalMessageObject* mqtto) {
   }
 }
 
-//------------------------------------------------------------------ 
-//--------------------------------------------- CONNECTION TO BROKER
+//------------------------------------------------------------------
+//--------------------------------------------------------- INCOMING
+
+const String suffix[3] = { "", "/+", "/#" };
+
+void subscribeTo(String local_topic, int depth) {
+  String fullTopic = local_topic + suffix[depth];
+  Serial.println(fullTopic);
+  mqttClient.subscribe(fullTopic);
+}
+
+void listenToEverytingOn(String local_topic) {
+  subscribeTo(local_topic, 2);
+}
+
+//TODO: Message Reciever Processor
+void messageProcessor() {
+  // if a message comes in, read it:
+  if (mqttClient.parseMessage() > 0) {
+    Serial.print("Got a message on topic: ");
+    Serial.println(mqttClient.messageTopic());
+    // read the message:
+    while (mqttClient.available()) {
+      // convert numeric string to an int:
+      int message = mqttClient.parseInt();
+      Serial.println(message);
+      // if the message is greater than 0, set the LED to full intensity:
+      //      if (message > 0) {
+      //        intensity = 255;
+      //      }
+    }
+  }
+}
+
+void onMqttMessage(int messageSize) {
+  // we received a message, print out the topic and contents
+  Serial.print("Received a message with topic '");
+  Serial.print(mqttClient.messageTopic());
+  Serial.print("', duplicate = ");
+  Serial.print(mqttClient.messageDup() ? "true" : "false");
+  Serial.print(", QoS = ");
+  Serial.print(mqttClient.messageQoS());
+  Serial.print(", retained = ");
+  Serial.print(mqttClient.messageRetain() ? "true" : "false");
+  Serial.print("', length ");
+  Serial.print(messageSize);
+  Serial.println(" bytes:");
+
+  // use the Stream interface to print the contents
+  while (mqttClient.available()) {
+    Serial.print((char)mqttClient.read());
+  }
+  Serial.println();
+
+  Serial.println();
+}
+
+
+
+//------------------------------------------------------------------
+//--------------------------------------------- CONNECTING TO BROKER
 
 //-------------------------------------   connectToBroker()
 boolean connectToBroker() {
@@ -93,9 +156,6 @@ boolean connectToBroker() {
     // return that you're not connected:
     return false;
   }
-  // once you're connected, you can proceed:
-  mqttClient.subscribe(subscription_topic);
-  // return that you're connected:
   return true;
 }
 
@@ -103,7 +163,7 @@ boolean connectToBroker() {
 //-------------------------------------   connectToMQTT()
 //TODO:Limit attempts, fail gracefully
 void connectToMQTT() {
-    // set the credentials for the MQTT client:
+  // set the credentials for the MQTT client:
   mqttClient.setId(clientID);
   mqttClient.setUsernamePassword(SECRET_MQTT_USER, SECRET_MQTT_PASS);
 
@@ -115,38 +175,26 @@ void connectToMQTT() {
   Serial.println("connected to broker");
 }
 
+//-------------------------------------   setMQTTDefaultListener()
+void startMQTTDefaultListener() {
+  listenToEverytingOn(ROOT_TOPIC);
+  mqttClient.onMessage(onMqttMessage);
+}
+
 //-------------------------------------   testMQTTConnection()
 void testMQTTConnection() {
-    // if not connected to the broker, try to connect:
+  // if not connected to the broker, try to connect:
   if (!mqttClient.connected()) {
     Serial.println("reconnecting");
     connectToBroker();
   }
 }
 
-//------------------------------------------------------------------ 
-//--------------------------------------------------------- INCOMING
-
-//----------------------------------- -- Place Holder Message Reader
-//TODO: Message Reciever Processor
-void fetchMQTTMessage() {
-    // if a message comes in, read it:
-  if (mqttClient.parseMessage() > 0) {
-    Serial.print("Got a message on topic: ");
-    Serial.println(mqttClient.messageTopic());
-    // read the message:
-    while (mqttClient.available()) {
-      // convert numeric string to an int:
-      int message = mqttClient.parseInt();
-      Serial.println(message);
-      // if the message is greater than 0, set the LED to full intensity:
-//      if (message > 0) {
-//        intensity = 255;
-//      }
-    }
-  }
+void touchMQTT() {
+  testMQTTConnection();
+  mqttClient.poll();
 }
 
-//------------------------------------------ End Place Holder Message Reader
+
 
 #endif

@@ -1,6 +1,6 @@
 /*
-2021 October 03
-Message Seeder Code v 0.0.1
+2021 October 05
+Tester Code v 0.0.1
 */
 
 #include "MQTT_Handler.h"
@@ -29,6 +29,8 @@ void setup() {
 
   connectToWiFi();
   connectToMQTT();
+
+  startMQTTDefaultListener();
   
 }
 
@@ -60,15 +62,13 @@ void loop() {
 
   //-------------------------------------  Update Remote World
   // if not connected to the broker, try to connect:
-  if (!mqttClient.connected()) {
-    Serial.println("reconnecting");
-    connectToBroker();
-  }
+    touchMQTT();
 
     sendMQTTTimedObject(&randomMessageObject);
     sendMQTTTimedObject(&scaleToneMessageObject);
     sendMQTTTimedObject(&ellapsedMillisObject);
     sendMQTTConditionalMessage(&conditionalSender);
+    
 
 //  sendMQTTTimedObject(&hungerMessageObject);
 //  sendMQTTTimedObject(&strokeMessageObject);
