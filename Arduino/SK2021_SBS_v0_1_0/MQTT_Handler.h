@@ -22,6 +22,16 @@ int port = 1883;
 char clientID[] = "Tester";
 
 
+//------------------------------------------------------------------
+//--------------------------------------------------------- Processing
+//------------------------------------------------------- to customize
+
+//customize me
+void doSomethingWithAnInt(String topic_string, int message_int) {
+  //Nothing to do yet.
+}
+
+
 
 //------------------------------------------------------------------
 //--------------------------------------------------------- OUTGOING
@@ -106,103 +116,91 @@ void listenToEverytingOn(String local_topic) {
 
 //-------------------------------------   incoming message object
 
-//// define a new type that is a function pointer
-//struct MQTT_IncomingMessageObject {
-//  long timeRecieved;
-//  int messageSize;
-//  boolean dup;
-//  int QoS;
-//  boolean retain;
-//  //byte[] message;
-//  char topic[];
-//};
-//
-//
-//typedef void (*message_processor)(void);
-//
+struct MQTT_IncomingMessageObject {
+  long timeRecieved;
+  int messageSize;
+  boolean dup;
+  int QoS;
+  boolean retain;
+  uint8_t* message; //danger danger
+  String topic;
+};
 
+//------------------------------------- Topic as Struct
+//typedef void (*message_processor)(MQTT_IncomingMessageObject);
+//
 //struct Topic {
 //  String fullTopic;
 //  message_processor processMessage;
+//};
 
-//}
-
+//------------------------------------- retrieveMessage()
 void retrieveMessage(uint8_t *msg, int messageSize) {
   mqttClient.read(msg, messageSize);
 }
 
-//TODO: Message Reciever Processor
-void messageProcessor() {
-  // if a message comes in, read it:
-  if (mqttClient.parseMessage() > 0) {
-    Serial.print("Got a message on topic: ");
-    Serial.println(mqttClient.messageTopic());
-    // read the message:
-    while (mqttClient.available()) {
-      // convert numeric string to an int:
-      int message = mqttClient.parseInt();
-      Serial.println(message);
-      // if the message is greater than 0, set the LED to full intensity:
-      //      if (message > 0) {
-      //        intensity = 255;
-      //      }
-    }
-  }
-}
-
-void onMqttMessage(int messageSize) {
-  // we received a message, print out the topic and contents
-  Serial.print("Received a message with topic '");
-  Serial.print(mqttClient.messageTopic());
-  Serial.print("', duplicate = ");
-  Serial.print(mqttClient.messageDup() ? "true" : "false");
-  Serial.print(", QoS = ");
-  Serial.print(mqttClient.messageQoS());
-  Serial.print(", retained = ");
-  Serial.print(mqttClient.messageRetain() ? "true" : "false");
-  Serial.print("', length ");
-  Serial.print(messageSize);
-  Serial.println(" bytes:");
-
-  // use the Stream interface to print the contents
-  uint8_t msg[messageSize];
-  retrieveMessage(msg, messageSize);
-
-  String testString;
-
-  Serial.print("\t");
-  for (int b = 0; b <messageSize; b++) {
-    Serial.print((char)msg[b]);
-    testString = testString + ((char)msg[b]);
-  }
-  
+//------------------------------------- messageAsString()
+String messageAsString(uint8_t *msg, int messageSize) {
   uint8_t msgstr[messageSize+1];
   memcpy(msgstr,msg,messageSize); 
-  msgstr[messageSize+1] = 0; // null-termination so it acts like a C-string
-  int testInt = String((char*)msgstr).toInt();
+  msgstr[messageSize] = 0; // null-termination so it acts like a C-string
+  return String((char*)msgstr);
+}
 
-  char msgstr_c[messageSize+1];
-  memcpy(msgstr_c,msg,messageSize); 
-  msgstr_c[messageSize+1] = 0; // null-termination so it acts like a C-string
-  int testInt2 = String(msgstr_c).toInt();
-  
+//------------------------------------- messageAsInt()
+int messageAsInt(uint8_t *msg, int messageSize) {
+  return messageAsString(msg, messageSize).toInt();
+}
 
-  
-  Serial.print("\t");
-  Serial.print((char*)msg);
+//------------------------------------- printMessage()
+void printMessage(MQTT_IncomingMessageObject* mqtti) {
+  Serial.print("Received a message with topic '");
+  Serial.print(mqtti->topic);
+  Serial.print("', duplicate = ");
+  Serial.print(mqtti->dup ? "true" : "false");
+  Serial.print(", QoS = ");
+  Serial.print(mqtti->QoS);
+  Serial.print(", retained = ");
+  Serial.print(mqtti->retain ? "true" : "false");
+  Serial.print("', length ");
+  Serial.print(mqtti->messageSize);
+  Serial.println(" bytes:");
 
-//    Serial.print("\t");
-//  Serial.print(int(msg));
+  String testString = messageAsString(mqtti->message, mqtti->messageSize);
+  int testInt = messageAsInt(mqtti->message, mqtti->messageSize);
+
   Serial.print("\t");
   Serial.print(testString);
-    Serial.print("\t");
-  Serial.print(testInt);
-  Serial.println();
-
+  Serial.print("\t");
+  Serial.print(testInt); //returns 0 if no int is found
   Serial.println();
 }
 
-void mqttIncomingOperator(int messageSize) {
+
+//------------------------------------- DEFAULT MESSAGE RECIEVER
+//-------------------------------------  onMqttMessage()
+void onMqttMessage(int messageSize) {
+
+   uint8_t msg[messageSize];
+  
+
+   MQTT_IncomingMessageObject recievedMessage = {
+    .timeRecieved = millis(),
+    .messageSize = messageSize,
+    .dup = mqttClient.messageDup(),
+    .QoS = mqttClient.messageQoS(),
+    .retain = mqttClient.messageRetain(),
+    .message = msg,
+    .topic = mqttClient.messageTopic()
+  };
+
+  retrieveMessage(msg, messageSize);
+  printMessage(&recievedMessage);
+}
+
+//-------------------------------------  ALTERNATIVE RECIVERS
+//-------------------------------------  mqttIncomingPrintOnly()
+void mqttIncomingPrintOnly(int messageSize) {
   // we received a message, print out the topic and contents
   Serial.print("Received a message with topic '");
   Serial.print(mqttClient.messageTopic());
@@ -223,6 +221,23 @@ void mqttIncomingOperator(int messageSize) {
   Serial.println();
 
   Serial.println();
+}
+
+//-------------------------------------  mqttIncomingExpectedInt()
+void mqttIncomingExpectedInt(int messageSize) {
+  // if a message comes in, read it:
+  if (mqttClient.parseMessage() > 0) {
+    Serial.print("Got a message on topic: ");
+    String topic_string = mqttClient.messageTopic();
+    Serial.println(topic_string);
+    // read the message:
+    while (mqttClient.available()) {
+      // convert numeric string to an int:
+      int message = mqttClient.parseInt();
+      Serial.println(message);
+      doSomethingWithAnInt(topic_string, message);
+    }
+  }
 }
 
 
