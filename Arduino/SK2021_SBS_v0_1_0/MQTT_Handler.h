@@ -14,6 +14,7 @@ MqttClient mqttClient(network_connection);
 char broker[] = "public.cloud.shiftr.io";
 int port = 1883;
 
+//#define ROOT_TOPIC ""  //GETS EVERYTHING on server
 #define ROOT_TOPIC "skommunity"
 #define SEPARATOR "/"
 #define MULTIALL "#"
@@ -87,6 +88,10 @@ void sendMQTTConditionalMessage(MQTT_ConditionalMessageObject* mqtto) {
 //------------------------------------------------------------------
 //--------------------------------------------------------- INCOMING
 
+
+
+
+//-------------------------------------   subscrbing to a topic
 const String suffix[3] = { "", "/+", "/#" };
 
 void subscribeTo(String local_topic, int depth) {
@@ -97,6 +102,33 @@ void subscribeTo(String local_topic, int depth) {
 
 void listenToEverytingOn(String local_topic) {
   subscribeTo(local_topic, 2);
+}
+
+//-------------------------------------   incoming message object
+
+//// define a new type that is a function pointer
+//struct MQTT_IncomingMessageObject {
+//  long timeRecieved;
+//  int messageSize;
+//  boolean dup;
+//  int QoS;
+//  boolean retain;
+//  //byte[] message;
+//  char topic[];
+//};
+//
+//
+//typedef void (*message_processor)(void);
+//
+
+//struct Topic {
+//  String fullTopic;
+//  message_processor processMessage;
+
+//}
+
+void retrieveMessage(uint8_t *msg, int messageSize) {
+  mqttClient.read(msg, messageSize);
 }
 
 //TODO: Message Reciever Processor
@@ -119,6 +151,58 @@ void messageProcessor() {
 }
 
 void onMqttMessage(int messageSize) {
+  // we received a message, print out the topic and contents
+  Serial.print("Received a message with topic '");
+  Serial.print(mqttClient.messageTopic());
+  Serial.print("', duplicate = ");
+  Serial.print(mqttClient.messageDup() ? "true" : "false");
+  Serial.print(", QoS = ");
+  Serial.print(mqttClient.messageQoS());
+  Serial.print(", retained = ");
+  Serial.print(mqttClient.messageRetain() ? "true" : "false");
+  Serial.print("', length ");
+  Serial.print(messageSize);
+  Serial.println(" bytes:");
+
+  // use the Stream interface to print the contents
+  uint8_t msg[messageSize];
+  retrieveMessage(msg, messageSize);
+
+  String testString;
+
+  Serial.print("\t");
+  for (int b = 0; b <messageSize; b++) {
+    Serial.print((char)msg[b]);
+    testString = testString + ((char)msg[b]);
+  }
+  
+  uint8_t msgstr[messageSize+1];
+  memcpy(msgstr,msg,messageSize); 
+  msgstr[messageSize+1] = 0; // null-termination so it acts like a C-string
+  int testInt = String((char*)msgstr).toInt();
+
+  char msgstr_c[messageSize+1];
+  memcpy(msgstr_c,msg,messageSize); 
+  msgstr_c[messageSize+1] = 0; // null-termination so it acts like a C-string
+  int testInt2 = String(msgstr_c).toInt();
+  
+
+  
+  Serial.print("\t");
+  Serial.print((char*)msg);
+
+//    Serial.print("\t");
+//  Serial.print(int(msg));
+  Serial.print("\t");
+  Serial.print(testString);
+    Serial.print("\t");
+  Serial.print(testInt);
+  Serial.println();
+
+  Serial.println();
+}
+
+void mqttIncomingOperator(int messageSize) {
   // we received a message, print out the topic and contents
   Serial.print("Received a message with topic '");
   Serial.print(mqttClient.messageTopic());
