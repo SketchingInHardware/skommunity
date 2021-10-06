@@ -1,6 +1,6 @@
 /*
-2021 October 05
-Tester Code v 0.0.1
+2021 October 03
+Message Seeder Code v 0.0.1
 */
 
 #include "MQTT_Handler.h"
@@ -8,10 +8,7 @@ Tester Code v 0.0.1
 #include "HardwareHandler.h"
 
 //Message Generators
-#include "RandomNumber.h"
-#include "Scales.h"
-#include "EllapsedMillis.h"
-#include "SenderWithConditions.h"
+#include "SenderExamples.h"
 
 
 //----------------------------------------------------   SETUP
@@ -30,7 +27,8 @@ void setup() {
   connectToWiFi();
   connectToMQTT();
 
-  startMQTTDefaultListener();
+  //startMQTTDefaultListener();
+  startMQTTListener("skommunity", onMqttMessage);
   
 }
 

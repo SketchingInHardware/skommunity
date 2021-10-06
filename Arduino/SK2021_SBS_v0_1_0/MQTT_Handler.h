@@ -274,10 +274,19 @@ void connectToMQTT() {
   Serial.println("connected to broker");
 }
 
+//------------------------------------- Valid receiver typedef
+typedef void (*mqtt_valid_receiver)(int);
+
 //-------------------------------------   setMQTTDefaultListener()
 void startMQTTDefaultListener() {
   listenToEverytingOn(ROOT_TOPIC);
   mqttClient.onMessage(onMqttMessage);
+}
+
+//-------------------------------------   setMQTTListener()
+void startMQTTListener(String topic, mqtt_valid_receiver reciever) {
+  listenToEverytingOn(topic);
+  mqttClient.onMessage(reciever);
 }
 
 //-------------------------------------   testMQTTConnection()
