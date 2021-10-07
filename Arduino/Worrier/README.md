@@ -1,4 +1,4 @@
-# Worrier
+# Worrier Profile
 
 ## Technical Profile
 
