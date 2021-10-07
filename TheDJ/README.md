@@ -8,7 +8,7 @@ Note: The DJ was created largely to generate information on the skommunity chann
 |----	|----	|----	|----	|----	|----	|
 | 1  	| 0  	| 0  	| 0  	| 0  	| 1  	|
 
-A class 33 object.
+Currently a class 33 object.
 
 ### Internal Input
 The millis, a random number generator, counter that counts up and down.
