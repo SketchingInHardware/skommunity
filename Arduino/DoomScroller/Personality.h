@@ -6,6 +6,7 @@
 #define MAX_BANDWIDTH 10000 //cannot be bigger than int
 #define MAX_DELAY 5000
 
+
 int currentBandwidth = MAX_BANDWIDTH;
 int currentSaturation = 0;
 const float fineThreshold = 0.3;
@@ -44,12 +45,19 @@ void wellFuckMe() {
   NVIC_SystemReset();
 }
 
-void howamIfeeling() {
+void checkInWithTheBody() {
+  currentBandwidth = map(getFortitude(), 0, 1023, MAX_BANDWIDTH/2, MAX_BANDWIDTH);
+}
 
-  if (MAX_BANDWIDTH < currentSaturation) {
+
+void howamIfeeling() {
+  checkInWithTheBody(); 
+  if (currentBandwidth < currentSaturation) {
     wellFuckMe();
   }
-
+  Serial.print("currentBandwidth:");
+  Serial.print(currentBandwidth);
+    Serial.print("\t");
   float percentFull = float(currentSaturation) / float(currentBandwidth);
   Serial.print("precentFul:");
   Serial.print(percentFull);
@@ -78,9 +86,7 @@ void chooseFeed() {
   startMQTTListener("", inhale);
 }
 
-void acknowledgeFeelings() {
-  currentBandwidth = map(getFortitude(), 0, 1023, 0, MAX_BANDWIDTH);
-}
+
 
 void doomScroll(){
   //by putting this here, may nap multiple times if there is 
