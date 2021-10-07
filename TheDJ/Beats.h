@@ -5,7 +5,7 @@
 //- Local hardware inputs? 
 
 
-//-------------------------------------   Ellapsed Millia
+//-------------------------------------   Ellapsed Millis
 
 #define MILLIS_SUB_TAG "millis"
 #define MILLIS_FULL_TOPIC ROOT_TOPIC SEPARATOR MILLIS_SUB_TAG
