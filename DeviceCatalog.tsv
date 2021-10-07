@@ -1,0 +1,9 @@
+Device Name	II	IO	LI	LO	NI	NO	CLASS
+DoomScroller	1	1	1	1	0	1	61
+InspirationFader	0	0	0	1	1	0	6
+OverSharer	0	0	0	1	0	1	5
+Poet	1	0	0	0	0	1	33
+Retweeter	0	0	0	1	1	1	7
+TheDJ	1	0	0	0	0	1	33
+Waver	0	0	0	1	1	0	6
+Worrier	1	0	0	0	0	1	33
