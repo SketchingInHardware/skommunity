@@ -1,4 +1,4 @@
-# Worrier
+# Poet
 
 ## Technical Profile
 
@@ -9,13 +9,15 @@
 A type 33 object.
 
 ### Internal Input
-Constant compared to algorithmically generated variable . Once generated random tigger concern (bigWorry) compared to random number generated every loop (current_Worry).
+Constant compared to algorithmically generated variable. Sums three waves forms generated using a function generator library and compares them against a baseline value.
+
+Has an internal array as a data source.
 
 ### Network Output
-When the constant == the variable, sends "that hurt." to the topic "ouch" on the selected MQTT network/parent topic.
+When the constant == the variable, sends a value from its array of thoughts.
 
 ## Personality Profile
 
-The worrier is stuck running through all its fears that come at it unceasingly and at random. While unstoppable, they are not unbidden. It calls for the update itself, but it has no choice.  
+The poet combines sentiment, awareness and ambition into inspiration. This poet is internally motivated, not looking to outside influence to pull from.
 
-The worrier gives no local indication that anything is wrong. Nor does it really give itself any local actions to self soothe. It just occasionally blurts out to its online community when it happens to alight upon it's biggest fear. 
+Opaque to its locality it may seem oblivious to the world at hand while providing balm to the world at large. 
