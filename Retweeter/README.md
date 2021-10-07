@@ -12,6 +12,10 @@ A class 7 object.
 
 Listens to two topics, each so important to it.
 
+Those feeds are:
+- `skommunity/feeds/dinger`
+- `skommunity/feeds/ouch`
+
 ### Network Output
 
 When a new message comes in on one topic, it is relayed to the other topic.

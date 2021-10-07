@@ -40,8 +40,8 @@ MqttClient mqttClient(wifi);
 // details for MQTT client:
 char broker[] = "public.cloud.shiftr.io";
 int port = 1883;
-char topic[] = "todbot/feeds/dinger";
-char clientID[] = "buttonClient";
+char topic[] = "skommunity/feeds/dinger";
+char clientID[] = "SkommunityClient";
 
 
 void setup() {

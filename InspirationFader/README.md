@@ -15,7 +15,7 @@ The object listens to just one feed, hoping for good news.
 This time will be it.
 
 The inspiration feed is:
-- todbot/feeds/dinger -- all worries
+- `skommunityfeeds/dinger`
 
 ### Local Output
 
@@ -26,7 +26,9 @@ And then the inspiration fades...
 ## Personality Profile
 
 The InspirationFader is energized by certain news from the Net.
+
 This new datum will surely spur it into action.
+
 And it does! For a while. 
 
 
