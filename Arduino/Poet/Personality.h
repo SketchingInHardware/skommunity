@@ -4,46 +4,47 @@
 #define POET_SUB_TAG "thoughts_on_autumn"
 #define POET_FULL_TOPIC ROOT_TOPIC SEPARATOR POET_SUB_TAG
 
+const bool selfTalk = false;
+
 funcgen sentiment;
 funcgen awareness;
 funcgen ambition;
 
-const float sentQ = 36;
-const float awareQ = 18;
-const float ambQ = 30;
+const float rangeOfSentiment = 36;
+const float rangeOfAwareness = 18;
+const float rangeOfAmbition = 30;
 
-const float scope = 2* (sentQ + awareQ +  ambQ);
 const float freqScale = 0.05;
 
-int POET_currentValue;
-int POET_targetValue = (sentQ + awareQ +  ambQ); //random(scope);
+int POET_currentMood;
+int POET_inspiredMood = (rangeOfSentiment + rangeOfAwareness +  rangeOfAmbition);
 
-boolean POET_lastState;
-boolean POET_currentState;
+boolean POET_wasInspired;
+boolean POET_isInspired;
 
 
 void setMusings() {
   sentiment.setFrequency(0.08 * freqScale);
-  sentiment.setAmplitude(sentQ);
+  sentiment.setAmplitude(rangeOfSentiment);
   sentiment.setPhase(0);
-  sentiment.setYShift(sentQ);
+  sentiment.setYShift(rangeOfSentiment);
 
   awareness.setFrequency(0.23 * freqScale);
-  awareness.setAmplitude(awareQ);
+  awareness.setAmplitude(rangeOfAwareness);
   awareness.setPhase(0.1);
-  awareness.setYShift(awareQ);
+  awareness.setYShift(rangeOfAwareness);
 
   ambition.setFrequency(0.34  * freqScale);
-  ambition.setAmplitude(ambQ);
+  ambition.setAmplitude(rangeOfAmbition);
   ambition.setPhase(0);
-  ambition.setYShift(ambQ);
+  ambition.setYShift(rangeOfAmbition);
 }
 
 const int numberOfThoughts = 20;
-String thoughts[numberOfThoughts] = { 
-  "thin the veil", 
-  "transition", 
-  "joy in the mourning", 
+String thoughts[numberOfThoughts] = {
+  "thin the veil",
+  "transition",
+  "joy in the mourning",
   "getting into bed",
   "equitorial insomniacs",
   "pumpkin shell",
@@ -56,32 +57,33 @@ String thoughts[numberOfThoughts] = {
   "withdrawl",
   "sleep, or stillness like a cat",
   "Springs Leap",
-   "Leaves as good bye party costume",
-   "Uncertainty",
-   "anticipation of dreams",
-   "Hope",
-   " ",
-  };
- int currentThought = 0;
+  "Leaves as good bye party costume",
+  "Uncertainty",
+  "anticipation of dreams",
+  "Hope",
+  " ",
+};
+int currentThought = 0;
 
 void setThought() {
-  if (currentThought < numberOfThoughts-1) {
+  if (currentThought < numberOfThoughts - 1) {
     currentThought ++;
   } else {
-    currentThought = 0; 
+    currentThought = 0;
   }
 }
 
 boolean poetState() {
-  POET_lastState = POET_currentState; 
-  
-  if (POET_currentValue == POET_targetValue) {
-    POET_currentState = true;
+  POET_wasInspired = POET_isInspired;
+
+  if (POET_currentMood == POET_inspiredMood) {
+    POET_isInspired = true;
   } else {
-    POET_currentState = false;
+    POET_isInspired = false;
   }
 
-  if ((POET_lastState != POET_currentState) && POET_currentState ) {
+  //If poet is NEWLY inspred then it will send. 
+  if ((POET_wasInspired != POET_isInspired) && POET_isInspired ) {
     setThought();
     return true;
   } else {
@@ -100,39 +102,46 @@ MQTT_ConditionalMessageObject Poem = {
   {.topic = POET_FULL_TOPIC }
 };
 
+void emote(int x, int y, int z, int sum) {
+    if (selfTalk) {
+    //For Plotter
+    Serial.print("Target");
+    Serial.print("\t");
+    Serial.print("x");
+    Serial.print("\t");
+    Serial.print("y");
+    Serial.print("\t");
+    Serial.print("z");
+    Serial.print("\t");
+    Serial.println("Sum");
+    Serial.print(POET_inspiredMood);
+    Serial.print("\t");
+    Serial.print(x);
+    Serial.print("\t");
+    Serial.print(y);
+    Serial.print("\t");
+    Serial.print(z);
+    Serial.print("\t");
+    Serial.print(sum);
+    Serial.println();
+
+    if (poetState()) {
+      Serial.println(poetMessage());
+    }
+  }
+
+  testMQTTConnection();
+  updateMQTTConditionalSender(&Poem);
+}
+
 void muse() {
   float t = millis() * 0.001;
   float x = sentiment.sinus(t);
   float y = awareness.sinus(t);
   float z = ambition.sinus(t);
   float sum = x + y + z;
-
-//    For Plotter
-//    Serial.print("Target");
-//    Serial.print("\t");
-//    Serial.print("x");
-//    Serial.print("\t");
-//    Serial.print("y");
-//    Serial.print("\t");
-//    Serial.print("z");
-//    Serial.print("\t");
-//    Serial.println("Sum");
-//    Serial.print(POET_targetValue);
-//    Serial.print("\t");
-//    Serial.print(x);
-//    Serial.print("\t");
-//    Serial.print(y);
-//    Serial.print("\t");
-//    Serial.print(z);
-//    Serial.print("\t");
-//    Serial.print(sum);
-//    Serial.println();
   
-  POET_currentValue = int(sum);
-//
-// if (poetState()) {
-//  Serial.println(poetMessage());
-// }
-   testMQTTConnection();
-   sendMQTTConditionalMessage(&Poem);
+  POET_currentMood = int(sum);
+  
+  emote(x, y, z, sum);
 }
