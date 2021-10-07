@@ -48,6 +48,7 @@ void rest(float feels) {
 }
 
 void wellFuckMe() {
+  //For SAMD boards like the Nano 33 IoT
   NVIC_SystemReset();
 }
 
