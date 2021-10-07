@@ -15,8 +15,6 @@ void setup() {
 
   // initialize serial:
   Serial.begin(9600);
-  // wait for serial monitor to open:
-  while (!Serial);
 
   connectToWiFi();
   connectToMQTT();

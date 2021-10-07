@@ -18,12 +18,10 @@ void setup() {
   //Serial for network debugging
   // initialize serial:
   Serial.begin(9600);
-  // wait for serial monitor to open:
-  while (!Serial);
 
   connectToWiFi();
   connectToMQTT();
-  
+
 }
 
 
@@ -31,7 +29,7 @@ void setup() {
 void loop() {
 
   worry();
-  
+
 }
 
 //----------------------------------------------------   END LOOP
