@@ -9,9 +9,13 @@ Message Seeder Code v 0.0.1
 #include "Personality.h"
 
 
+
+
 //----------------------------------------------------   SETUP
 void setup() {
 
+
+  //Serial for network debugging
   // initialize serial:
   Serial.begin(9600);
   // wait for serial monitor to open:

@@ -4,24 +4,26 @@
 #define WORRY_SUB_TAG "ouch"
 #define WORRY_FULL_TOPIC ROOT_TOPIC SEPARATOR WORRY_SUB_TAG
 
-#define WORRY_SCOPE 1000000
+#define WORRY_SCOPE 100000
 
-boolean W_lastState;
-boolean W_currentState;
+const bool selfTalk = true;
 
-int W_currentValue= random(WORRY_SCOPE);
-int W_targetValue = random(WORRY_SCOPE);
+boolean W_wasAggitated;
+boolean W_isAggitated;
+
+int W_currentConcern = random(WORRY_SCOPE);
+const int W_triggerConcern = random(WORRY_SCOPE);
 
 boolean worryState() {
-  W_lastState = W_currentState; 
-  
-  if (W_currentValue == W_targetValue) {
-    W_currentState = true;
+  W_wasAggitated = W_isAggitated;
+
+  if (W_currentConcern == W_triggerConcern) {
+    W_isAggitated = true;
   } else {
-    W_currentState = false;
+    W_isAggitated = false;
   }
 
-  if ((W_lastState != W_currentState) && W_currentState ) {
+  if ((W_wasAggitated != W_isAggitated) && W_isAggitated ) {
     return true;
   } else {
     return false;
@@ -30,7 +32,6 @@ boolean worryState() {
 
 String worryMessage() {
   return "that hurt.";
-  //return String(W_currentValue);
 }
 
 MQTT_ConditionalMessageObject Worry = {
@@ -40,11 +41,21 @@ MQTT_ConditionalMessageObject Worry = {
   {.topic = WORRY_FULL_TOPIC }
 };
 
-int worry() {
-  W_currentValue = random(WORRY_SCOPE);
-//  Serial.print(W_currentValue);
-//  Serial.print("\t");
-//  Serial.println(W_targetValue);
+void emote() {
+  if (selfTalk) {
+    Serial.print(W_currentConcern);
+    Serial.print("\t");
+    Serial.println(W_triggerConcern);
+  }
   testMQTTConnection();
-  sendMQTTConditionalMessage(&Worry);
+  updateMQTTConditionalSender(&Worry);
+}
+
+int setConcern() {
+  return random(WORRY_SCOPE);
+}
+
+void worry() {
+  W_currentConcern = setConcern();
+  emote();
 }
