@@ -69,8 +69,8 @@ struct MQTT_ConditionalMessageObject {
 //    return myConcatenation; //But does not return
 //}
 
-//-------------------------------------   sendMQTTTimedObject(MQTT_TimedMessageObject* mqtto)
-void sendMQTTTimedObject(MQTT_TimedMessageObject* mqtto) {
+//-------------------------------------   updateMQTTTimedSender(MQTT_TimedMessageObject* mqtto)
+void updateMQTTTimedSender(MQTT_TimedMessageObject* mqtto) {
   if (millis() - mqtto->lastTimeSent > mqtto->interval) {
     // start a new message on the objects topic:
     mqttClient.beginMessage(mqtto->topic);
@@ -81,8 +81,8 @@ void sendMQTTTimedObject(MQTT_TimedMessageObject* mqtto) {
   }
 }
 
-//-------------------------------------   sendMQTTConditionalMessage(MQTT_ConditionalMessageObject* mqtto)
-void sendMQTTConditionalMessage(MQTT_ConditionalMessageObject* mqtto) {
+//-------------------------------------   updateMQTTConditionalSender(MQTT_ConditionalMessageObject* mqtto)
+void updateMQTTConditionalSender(MQTT_ConditionalMessageObject* mqtto) {
   if (mqtto->getState()) {
     // start a new message on the objects topic:
     mqttClient.beginMessage(mqtto->topic);
