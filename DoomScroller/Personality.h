@@ -1,8 +1,6 @@
 
 #include "MQTT_Handler.h"
 
-
-
 #define MAX_BANDWIDTH 10000 //cannot be bigger than int
 #define MAX_DELAY 5000
 
@@ -27,9 +25,7 @@ void setExhaustionTable() {
     exhaustionCurve[e] = level;
   }
 
-  if (selfTalk) {
-    Serial.print("Exhaustion Curve: ");
-  }
+  if (selfTalk) { Serial.print("Exhaustion Curve: ");}
   for (int i = 0; i < STEPS; i++) {
     if (selfTalk) {
       Serial.print(exhaustionCurve[i]);
@@ -37,9 +33,7 @@ void setExhaustionTable() {
     }
 
   }
-  if (selfTalk) {
-    Serial.println();
-  }
+  if (selfTalk) { Serial.println(); }
 }
 
 void rest(float feels) {
@@ -85,9 +79,7 @@ float howamIfeeling() {
 
 void inhale(int gulpSize) {
   currentSaturation += gulpSize;
-  if (selfTalk) {
-    Serial.println(currentSaturation);
-  }
+  if (selfTalk) { Serial.println(currentSaturation); }
 }
 
 void chooseFeed() {
