@@ -1,5 +1,8 @@
 # oversharer_code.py -- Sketching in Hardware 2021 MQTT boune emitter
 #
+# It overshares its internal thoughts, posting them to the Net,
+# not caring what others think, slowly going crazy.
+#
 # 5 Oct 2021 -  @todbot 
 # Part of the Skommunity project
 #
