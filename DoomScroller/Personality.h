@@ -6,15 +6,17 @@
 #define MAX_BANDWIDTH 10000 //cannot be bigger than int
 #define MAX_DELAY 5000
 
+const bool selfTalk = "true";
 
 int currentBandwidth = MAX_BANDWIDTH;
 int currentSaturation = 0;
-const float fineThreshold = 0.3;
 
 #define STEPS 100
 #define OUTPUT_MAX 100
 byte exhaustionCurve[STEPS];
 
+//https://tigoe.github.io/LightProjects/fading.html
+//https://diarmuid.ie/blog/pwm-exponential-led-fading-on-arduino-or-other-platforms
 void setExhaustionTable() {
   float R = (STEPS * log10(2)) / (log10(OUTPUT_MAX));
   // set the range of values:
@@ -24,21 +26,31 @@ void setExhaustionTable() {
     byte level = pow (2, (e / R)) - 1;
     exhaustionCurve[e] = level;
   }
-  Serial.print("Exhaustion Curve: ");
-  for (int i = 0; i < STEPS; i++) {
-    Serial.print(exhaustionCurve[i]);
-    Serial.print(" ");
+
+  if (selfTalk) {
+    Serial.print("Exhaustion Curve: ");
   }
-  Serial.println();
+  for (int i = 0; i < STEPS; i++) {
+    if (selfTalk) {
+      Serial.print(exhaustionCurve[i]);
+      Serial.print(" ");
+    }
+
+  }
+  if (selfTalk) {
+    Serial.println();
+  }
 }
 
-void rest(float howFull) {
-  int multiplier = exhaustionCurve[int(howFull*100)];
-  int amount = multiplier * (MAX_DELAY/100);
-  Serial.print("naptime:");
-  Serial.print(amount);
-  Serial.print("\t");
-  delay(amount);
+void rest(float feels) {
+  int extenuations = exhaustionCurve[int(feels * 100)];
+  int napTime = extenuations * (MAX_DELAY / 100);
+  if (selfTalk) {
+    Serial.print("naptime:");
+    Serial.print(napTime);
+    Serial.print("\t");
+  }
+  delay(napTime);
 }
 
 void wellFuckMe() {
@@ -46,38 +58,36 @@ void wellFuckMe() {
 }
 
 void checkInWithTheBody() {
-  currentBandwidth = map(getFortitude(), 0, 1023, MAX_BANDWIDTH/2, MAX_BANDWIDTH);
+  currentBandwidth = map(getFortitude(), 0, 1023, MAX_BANDWIDTH / 2, MAX_BANDWIDTH);
 }
 
 
-void howamIfeeling() {
-  checkInWithTheBody(); 
+float howamIfeeling() {
+  checkInWithTheBody();
+  
   if (currentBandwidth < currentSaturation) {
     wellFuckMe();
   }
-  Serial.print("currentBandwidth:");
-  Serial.print(currentBandwidth);
+
+  float percentBrainFry = float(currentSaturation) / float(currentBandwidth);
+  if (selfTalk) {
+    Serial.print("currentBandwidth:");
+    Serial.print(currentBandwidth);
     Serial.print("\t");
-  float percentFull = float(currentSaturation) / float(currentBandwidth);
-  Serial.print("precentFul:");
-  Serial.print(percentFull);
-  Serial.print("\t");
-  rest(percentFull); 
-  //  if (percentFull < fineThreshold) {
-  //    Serial.print("This is fine.");
-  //    Serial.print("\t");
-  //    //rest(currentSaturation);
-  //  } else {
-  //    Serial.print("hunh");
-  //    Serial.print("\t");
-  //    rest(percentFull);
-  //  }
+
+    Serial.print("precentFul:");
+    Serial.print(percentBrainFry);
+    Serial.print("\t");
+  }
+  return percentBrainFry;
 }
 
 
 void inhale(int gulpSize) {
   currentSaturation += gulpSize;
-  Serial.println(currentSaturation);
+  if (selfTalk) {
+    Serial.println(currentSaturation);
+  }
 }
 
 void chooseFeed() {
@@ -86,12 +96,16 @@ void chooseFeed() {
   startMQTTListener("", inhale);
 }
 
+void scroll() {
+    touchMQTT();
+}
 
+void react() {
+  float feels = howamIfeeling();
+  rest(feels);
+}
 
-void doomScroll(){
-  //by putting this here, may nap multiple times if there is 
-  //no new messages. Could put a message check, but maybe that
-  //is the right behavior.
-  howamIfeeling();
-  touchMQTT();
+void doomScroll() {
+  scroll();
+  react();
 }
