@@ -41,13 +41,13 @@ void loop() {
   }
 
 
-    sendMQTTTimedObject(&scaleToneMessageObject);
-    sendMQTTTimedObject(&ellapsedMillisObject);
+    updateMQTTTimedSender(&scaleToneMessageObject);
+    
+    updateMQTTTimedSender(&ellapsedMillisObject);
 
-    sendMQTTTimedObject(&randomMessageObject);
-
-    //will be at least 3 seconds
-    sendMQTTConditionalMessage(&irregularRandom);
+    updateMQTTTimedSender(&randomMessageObject);
+    
+    updateMQTTConditionalSender(&irregularRandom);
 
 
 }
