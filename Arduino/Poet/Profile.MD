@@ -6,7 +6,7 @@
 |----	|----	|----	|----	|----	|----	|
 | 1  	| 0  	| 0  	| 0  	| 0  	| 1  	|
 
-A type 33 object.
+A class 33 object.
 
 ### Internal Input
 Constant compared to algorithmically generated variable. Sums three waves forms generated using a function generator library and compares them against a baseline value.
@@ -20,4 +20,4 @@ When the constant == the variable, sends a value from its array of thoughts.
 
 The poet combines sentiment, awareness and ambition into inspiration. This poet is internally motivated, not looking to outside influence to pull from.
 
-Opaque to its locality it may seem oblivious to the world at hand while providing balm to the world at large. 
+Opaque to its locality it may seem oblivious to the world at hand while providing balm to the world at large.
