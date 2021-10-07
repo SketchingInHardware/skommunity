@@ -14,7 +14,7 @@
 # To install:
 # - Install CircuitPython 7 on board
 # - Install libraries, resources, and code.py
-# -- circup adafruit_imageload adafruit_minimqtt
+# -- circup adafruit_imageload adafruit_display_text adafruit_minimqtt
 # -- cp -X images /Volumes/CIRCUITPY
 # -- cp -X oversharer_code.py /Volumes/CIRCUITPY/code.py
 # - Create a 'secrets.py' with WiFi & MQTT credentials (see 'secrets_exmaple.py')
@@ -24,6 +24,7 @@ import time, math, random
 import board, busio
 import displayio, terminalio
 import adafruit_imageload
+from adafruit_display_text import label
 
 import ssl, socketpool, wifi
 import adafruit_minimqtt.adafruit_minimqtt as MQTT
@@ -46,6 +47,8 @@ dw,dh = display.width, display.height
 print("display size:", display.width, display.height)
 screen = displayio.Group()  # a main group that holds everything
 display.show(screen) # add main group to display
+name_label = label.Label(font=terminalio.FONT, x=dw//2-20, y=dh-20, color=0x999999, text="retweeter")
+screen.append(name_label)
 
 balls = []
 ball_img, ball_pal = adafruit_imageload.load(ball_img_fname)

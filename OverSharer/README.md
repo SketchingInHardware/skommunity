@@ -20,11 +20,11 @@ When a head bounces against a wall, it thinks of a worry.
 When a head bounces against a wall, it emits a worry to the world. Thanks, OverSharer.
 
 The worry feeds are:
-- todbot/feeds/ouch -- all worries
-- todbot/feeds/ouchU -- only worries when hitting the top wall
-- todbot/feeds/ouchD -- only worries when hitting the bottom wall
-- todbot/feeds/ouchL -- only worries when hitting the left wall
-- todbot/feeds/ouchR -- only worries when hitting the right wall
+- `skommunity/feeds/ouch` -- all worries
+- `skommunity/feeds/ouchU` -- only worries when hitting the top wall
+- `skommunity/feeds/ouchD` -- only worries when hitting the bottom wall
+- `skommunity/feeds/ouchL` -- only worries when hitting the left wall
+- `skommunity/feeds/ouchR` -- only worries when hitting the right wall
 
 ## Personality Profile
 

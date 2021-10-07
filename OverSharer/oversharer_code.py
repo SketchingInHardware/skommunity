@@ -28,12 +28,12 @@ import ssl, socketpool, wifi
 import adafruit_minimqtt.adafruit_minimqtt as MQTT
 
 # MQTT feeds
-ouch_feed = "todbot/feeds/ouch"
+ouch_feed = "skommunity/feeds/ouch"
 feeds = (
-    'todbot/feeds/ouchU',
-    'todbot/feeds/ouchD',
-    'todbot/feeds/ouchL',
-    'todbot/feeds/ouchR',
+    'skommunity/feeds/ouchU',
+    'skommunity/feeds/ouchD',
+    'skommunity/feeds/ouchL',
+    'skommunity/feeds/ouchR',
 )
 
 msgs = (
@@ -62,6 +62,7 @@ ball_img_fname = "/images/jpm30a.bmp"
 
 display = board.DISPLAY  # CP already sets up display for us, 240x135
 display.brightness = 0.05
+
 dw,dh = display.width, display.height # convenience for later
 
 class Ball:
@@ -148,6 +149,8 @@ mqtt_client.connect()
 
 screen = displayio.Group()  # a main group that holds everything
 display.show(screen) # add main group to display
+name_label = label.Label(font=terminalio.FONT, x=dw//2-20, y=dh-20, color=0x999999, text="oversharer")
+screen.append(name_label)
 
 balls = []
 ball_img, ball_pal = adafruit_imageload.load(ball_img_fname)
