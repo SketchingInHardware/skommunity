@@ -62,14 +62,14 @@ void loop() {
   // if not connected to the broker, try to connect:
     touchMQTT();
 
-    sendMQTTTimedObject(&randomMessageObject);
-    sendMQTTTimedObject(&scaleToneMessageObject);
-    sendMQTTTimedObject(&ellapsedMillisObject);
+    updateMQTTTimedSender(&randomMessageObject);
+    updateMQTTTimedSender(&scaleToneMessageObject);
+    updateMQTTTimedSender(&ellapsedMillisObject);
     sendMQTTConditionalMessage(&conditionalSender);
     
 
-//  sendMQTTTimedObject(&hungerMessageObject);
-//  sendMQTTTimedObject(&strokeMessageObject);
+//  updateMQTTTimedSender(&hungerMessageObject);
+//  updateMQTTTimedSender(&strokeMessageObject);
 
 }
 
