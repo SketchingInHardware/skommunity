@@ -17,7 +17,6 @@ Has a look table to scale its exhaustion level in a non-linear fashion.
 ### Internal Output
 Debugging via Serial is on.  ^*(Is Serial a _local_ output or an _internal_ one.)
 
-
 ### Local Input
 Analog input to vary the size of the tolerance variable.
 Digital read set up, but does not effect the behavior of the device.
