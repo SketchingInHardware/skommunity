@@ -14,7 +14,7 @@ A class 6 object.
 It waves to you when you talk to it!  No matter what you say!
 
 The feed is:
-- `skommunityfeeds/dinger`
+- `skommunity/feeds/dinger`
 
 ### Local Output
 

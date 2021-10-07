@@ -163,7 +163,9 @@ def send_mqtt_msg(topic,message):
         mqtt_client.publish(topic,message)
     except OSError:
         print("ERROR sending to",topic)
-        
+        if mqtt_client.is_connected():
+            mqtt_client.disconnect()
+
 def bounce_action(ball=None, left=False, top=False):
     print("bounce_action:",left,top)
     ball_num = 0

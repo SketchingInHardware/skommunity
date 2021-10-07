@@ -31,8 +31,8 @@ import adafruit_minimqtt.adafruit_minimqtt as MQTT
 
 # MQTT feeds
 feeds = [
-    "todbot/feeds/ouch",
-    "todbot/feeds/dinger",
+    "skommunity/feeds/ouch",
+    "skommunity/feeds/dinger",
     ]
     
 ball_count = 3
@@ -44,7 +44,7 @@ dw,dh = display.width, display.height
 #########################################
 # Display & ball setup
 
-print("display size:", display.width, display.height)
+print("retweeter display size:", display.width, display.height)
 screen = displayio.Group()  # a main group that holds everything
 display.show(screen) # add main group to display
 name_label = label.Label(font=terminalio.FONT, x=dw//2-20, y=dh-20, color=0x999999, text="retweeter")
@@ -53,8 +53,6 @@ screen.append(name_label)
 balls = []
 ball_img, ball_pal = adafruit_imageload.load(ball_img_fname)
 ball_pal.make_transparent(0)
-
-last_msg = None
 
 class Ball:
     def __init__(self, x,y, w, h, vx=0,vy=0,tilegrid=None, action=lambda *args:None):
@@ -135,47 +133,50 @@ def disconnected(client, userdata, rc):
     print("Disconnected from MQTT broker!")
 
 
+last_send = None
+
 # on mqtt message receive
 def message(client, topic, message):
     # This method is called when a topic the client is subscribed to has a new message.
     print("Received message {0}: {1}".format(topic, message))
-    print("last_msg", last_msg)
-    this_msg = "%s:%s" % (topic,str(message))
-    if this_msg == last_msg:
-        print("not echoing myself")
+    msg = str(message)
+
+    this_send = topic + ":" + msg
+    
+    if this_send == last_send:
+        print("not going to echo myself")
         return
     
     # launch ball
     if topic == feeds[0]:  # left to right
-        print("feed0: ",topic)
+        print("feed0: ",topic, msg)
         ball = balls[0]
+        ball.msg = msg
         ball.on( 0+30, dh//2, 1,0)
     if topic == feeds[1]:  # right to left
-        print("feed1: ",topic)
+        print("feed1: ",topic, msg)
         ball = balls[1]
+        ball.msg = msg
         ball.on( dw-30, dh//2, -1,0)
-    
-# when ball hits edge
+
+# when ball hits edge, retweet msg on new feed
 def ball_action(ball=None, left=False, top=False):
-    global last_msg
-    print("do_something:",left,top, ball)
+    global last_send
+    print("ball_action:",left,top, ball.msg)
     ball.off()
-    
-    val = 1 if left else 2
-    val += 10 if top else 20  # such a hack
+
     feed = feeds[0] if left else feeds[1]
+    msg = ball.msg
+
+    last_send = feed + ':' +msg
     
-    print(time.monotonic(), "Sending msg w/ val: %d..." % val)
-    try: 
-        mqtt_client.publish(feed, val)
-        last_msg = "%s:%s" % (feed,str(val))
+    print(time.monotonic(), "Sending msg:", msg)
+    try:
+        mqtt_client.publish(feed, msg)
         print(time.monotonic(), "Sent!")
     except OSError:
-        print("ERROR! trying to reconnect...")
+        print("ERROR! on publish, trying to reconnect...")
         time.sleep(1)
-        #mqtt_client.disconnect()
-        time.sleep(1)
-        mqtt_client.reconnect()
 
     
 # construct our balls, each with its own TileGrid holding a bitmap
@@ -202,13 +203,20 @@ mqtt_client.connect()
 
 while True:
 
+    if not mqtt_client.is_connected():
+        print("disconnected! attempting to reconnect")
+        time.sleep(1)
+        mqtt_client.reconnect()
+        
     for b in balls:
         b.update()
 
     # this kills the framerate, not needed for sending, apparently
     # Poll the message queue 
     #mqtt_client.loop()
-    mqtt_client.loop( timeout=0.03 ) # timeout=0.01 gives ETIMEOUT, unfortuanately
-    #time.sleep(0.01)  # don't use this if doing mqtt_client.loop() because timeout
+    try:
+        mqtt_client.loop( timeout=0.03 ) # timeout=0.01 gives ETIMEOUT, unfortuanately
+    except OSError:
+        print("ERROR on mqtt_client.loop, will attempt reconnect soon")
 
     
