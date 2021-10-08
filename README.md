@@ -65,7 +65,7 @@ Example B: A device that a takes a sensor reading and transmits the value unalte
 
 | II 	| IO 	| LI 	| LO 	| NI 	| NO 	| CLASS |
 |----	|----	|----	|----	|----	|----	|----   |
-| 1  	| 0  	| 1  	| 0  	| 0  	| 1  	|9  	  |
+| 0  	| 0  	| 1  	| 0  	| 0  	| 1  	|9  	  |
 
 
 
