@@ -73,7 +73,7 @@ Example C: A device that has a temperature sensor. It _maps_^* the brightness of
 
 | II 	| IO 	| LI 	| LO 	| NI 	| NO 	| CLASS |
 |----	|----	|----	|----	|----	|----	|----   |
-| 1  	| 0  	| 1  	| 1  	| 0  	| 0  	|88  	  |
+| 1  	| 0  	| 1  	| 1  	| 0  	| 0  	|44  	  |
 
 ^* whether or not this represents "internal input" or not has not been resolved by the Authors.
 
