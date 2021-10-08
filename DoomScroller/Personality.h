@@ -4,7 +4,7 @@
 #define MAX_BANDWIDTH 10000 //cannot be bigger than int
 #define MAX_DELAY 5000
 
-const bool selfTalk = "true";
+const bool selfTalk = true;
 
 int currentBandwidth = MAX_BANDWIDTH;
 int currentSaturation = 0;
@@ -70,7 +70,7 @@ float howamIfeeling() {
     Serial.print(currentBandwidth);
     Serial.print("\t");
 
-    Serial.print("precentFul:");
+    Serial.print("brainFry:");
     Serial.print(percentBrainFry);
     Serial.print("\t");
   }
@@ -80,7 +80,11 @@ float howamIfeeling() {
 
 void inhale(int gulpSize) {
   currentSaturation += gulpSize;
-  if (selfTalk) { Serial.println(currentSaturation); }
+  if (selfTalk) { 
+    Serial.println();
+    Serial.print("updatedSaturation:");
+    Serial.println(currentSaturation); 
+  }
 }
 
 void chooseFeed() {
@@ -101,4 +105,5 @@ void react() {
 void doomScroll() {
   scroll();
   react();
+  if (selfTalk) { Serial.println(); }
 }
